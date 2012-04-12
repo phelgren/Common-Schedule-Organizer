@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_5_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/cavalry.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/flexjson.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/freemarker.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jsoup-1.5.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jt400.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/niggle.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Apache Software Foundation/Tomcat 5.5/common/lib/dbmanager.jar"/>
+	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
+</classpath>

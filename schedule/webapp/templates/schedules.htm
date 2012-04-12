@@ -1,0 +1,255 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>Common Schedule Organizer </title> 
+	<link rel="stylesheet" href="stylesheets/jquery.mobile-1.0.1.css" />
+	<link rel="stylesheet" href="stylesheets/demo.css" />
+	<script type="text/javascript" src="scripts/jquery-1.7.1.js"></script>
+	<script type="text/javascript" src="scripts/jquery.mobile-1.0.1.js"></script>
+	<script type="text/javascript" src="scripts/phonegap-1.1.0.js"></script>
+	<script type="text/javascript" src="scripts/DateFormatter.js"></script>
+	<script type="text/javascript" src="scripts/scheduleOrganizer.js"></script>
+	<script type="text/javascript">
+	
+	$( function() {
+	
+		 $('#spinner').bind("ajaxSend", function() {
+	    	$(this).show();
+   		 }).bind("ajaxComplete", function() {
+	    	$(this).hide();
+    		});
+    
+    	$('#spinner').hide();
+    	
+   	 $(document).ready(function(){	
+    
+//		    function reachableCallback(reachability) {
+//    			// There is no consistency on the format of reachability
+//   			var networkState = reachability.code || reachability;
+
+//  			var states = {};
+//    			states[NetworkStatus.NOT_REACHABLE]                      = 'No network connection';
+//    			states[NetworkStatus.REACHABLE_VIA_CARRIER_DATA_NETWORK] = 'Carrier data connection';
+//   			states[NetworkStatus.REACHABLE_VIA_WIFI_NETWORK]         = 'WiFi connection';
+
+//    			alert('Connection type: ' + states[networkState]);
+//			}
+
+//			navigator.network.isReachable('opensourceoni.com', reachableCallback);
+
+		// This should be called based on reachability
+		//localStorage.clear();
+			
+			$('#masterSchedButton').click(function() {
+				getMasterSchedule();
+			});
+			
+			$('#mySchedButton').click(function() {
+				getMySchedule();
+			});
+			
+		 $('#saveToMySchedule').click(function() {
+		 
+		 		saveToMySchedule();
+		 		
+		 });
+		 
+		 $('#removeFromMySchedule').click(function() {
+		 
+		 		removeMySession();
+		 		
+		 });
+	
+  	    document.addEventListener("deviceready", onDeviceReady, false);
+
+  	  	var d = new Date();
+  		var dow = $('#dow');
+  		dow[0].selectedIndex = d.getDay();
+  		
+  		if(dow[0].selectedIndex = -1)
+  			dow[0].selectedIndex = 0;
+  		
+  		dow.selectmenu("refresh");
+  		
+		});
+	
+	reloadAppData(); // Make sure we have the master schedule in a global variable ready for use
+	getMyScheduleFromStore(); // Make sure we have my schedule  in a global variable ready for use
+	checkAndUpdateStorage();
+
+	});
+	
+    // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+    //
+    function onDeviceReady() {
+        
+        
+    }
+
+
+</script>  
+</head> 
+<body> 
+
+ <div data-role="page" data-theme="b" id="home"> 
+ <input  type="hidden" value="${.data_model.requestURI}" id="fmuid" name='fmuid' />
+  <div data-role="header"> 
+    <h2>Get Common Schedule </h2> 
+  </div> 
+ 
+  	<div class="loader" id="spinner" align="center">
+  		<img src="images/ajax-loader.gif" alt="Loading" />
+	</div>
+	
+  <div data-role="content">
+    <p><strong>Check Schedules</strong> </p>
+           <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+			<label for="select-choice-conference" class="select">Select Conference:</label>
+				<div class="ui-select"><select name="confx" id="conf" data-native-menu="false">
+					<option value="S2012">Spring 2012</option>
+					<option value="F2011">Fall 2011</option>
+				</select></div>
+			</div>
+
+			<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+				<label for="select-choice-dow" class="select ui-select">Select day:</label>
+
+				<div class="ui-select"><select name="dowx" id="dow" data-native-menu="false">
+				    <option value="Saturday">Saturday</option>
+					<option value="Sunday">Sunday</option>
+					<option value="Monday">Monday</option>
+					<option value="Tuesday">Tuesday</option>
+					<option value="Wednesday">Wednesday</option>
+				</select></div>
+
+			</div>
+
+
+    <button type="submit" data-theme="c"  id="masterSchedButton">Master Schedule</button> 
+    <button type="submit" data-theme="b"  id="mySchedButton">My Schedule</button> 
+    
+  </div> 
+
+<div data-role="footer"> 
+	 <H6> Copyright (c) 2012 - <a href="http://www.valadd.com">Value Added Software, Inc.</a> </H6>
+</div> 
+
+
+</div> 
+ 
+<div data-role="page" id="scheduleDetail" data-theme="b"> 
+ 
+  <div data-role="header" data-position="fixed" id="masterHeader"> <a href="#home" data-icon="back">Back</a> 
+    <h1 id="mh" >Master Schedule</h1> 
+  </div> 
+ 
+  <div data-role="content" > 
+     
+     <ul data-role="listview" id="schedlist" data-inset="false" data-theme="b" data-dividertheme="b"> 
+      
+    </ul> 
+      
+  </div> 
+ 
+</div>
+
+<div data-role="page" id="myScheduleDetail" data-theme="b"> 
+ 
+  <div data-role="header" data-position="fixed" id="myHeader"> <a href="#home" data-icon="back">Back</a> 
+    <h1 id="myh">My Schedule</h1> 
+  </div> 
+ 
+  <div data-role="content"> 
+     
+     <ul data-role="listview" id="mySchedlist" data-inset="true" data-theme="b" data-dividertheme="b"> 
+      
+    </ul> 
+      
+  </div> 
+ 
+</div>
+
+<div data-role="page" id="abstractDetail"  data-theme="b"> 
+ 
+  <div data-role="header" data-position="fixed"> <a href="#scheduleDetail" data-icon="back">Back</a>
+    <h1>Abstract</h1> 
+  
+  </div> 
+ 
+  <div data-role="content"> 
+      
+     <button type="button" data-theme="c" href="#scheduleDetail" id="saveToMySchedule">Save to My Schedule</button>
+   	 Location: <div data-role="text" id="absLocation" data-inset="true" data-theme="c" > </div> 
+   	 Room: <div data-role="text" id="absRoom" data-inset="true" data-theme="c" > </div> 
+  	 Presenters: <div data-role="text" id="absPresenters" data-inset="true" data-theme="c" > </div>
+  	 Session ID: <div data-role="text" id="absSessionID" data-inset="true" data-theme="c" > </div>
+     <div data-role="text" id="absText" data-inset="true" data-theme="c" > </div> 
+    
+      
+  </div> 
+ 
+</div>
+
+<div data-role="page" id="myAbstractDetail" data-theme="b"> 
+ 
+  <div data-role="header" data-position="fixed"> <a href="#myScheduleDetail" data-icon="back">Back</a> 
+    <h1>Abstract</h1> 
+  
+  </div> 
+ 
+  <div data-role="content"> 
+         <a data-role="button" href="#confirmRemoval" >Remove from My Schedule</a>
+   	Location: <div data-role="text" id="myAbsLocation" data-inset="true" data-theme="c" > </div> 
+   	Room: <div data-role="text" id="myAbsRoom" data-inset="true" data-theme="c" > </div>
+    Presenters: <span data-role="text" id="myAbsPresenters"  data-theme="c" > </span>
+  	Session ID: <span data-role="text" id="myAbsSessionID"  data-theme="c" > </span>
+ 	
+     <div data-role="text" id="myAbsText" data-inset="true" data-theme="c"> </div> 
+    
+  </div> 
+ </div>
+ 
+ <div data-role="page" id="confirmRemoval" data-theme="b"> 
+ 
+  <div data-role="header" data-position="fixed"> 
+    <h1>Remove Selected Session. <strong> Are you SURE?</strong></h1> 
+  
+  </div> 
+ 
+  <div data-role="content"> 
+     
+    <button type="button" data-theme="c" data-url="#myScheduleDetail" id="removeFromMySchedule">Remove from My Schedule</button>
+    <a data-role="button" href="#myScheduleDetail" >Cancel</a>
+      
+  </div> 
+ 
+</div>
+
+<div data-role="page" id="biography"  data-theme="b"> 
+ 
+  <div data-role="header" data-position="fixed"> <a href="#abstractDetail" data-icon="back">Back</a>
+    <h1>Biography</h1> 
+  
+  </div> 
+ 
+  <div data-role="content"> 
+   	 Backgound: <div data-role="text" id="personInfo" data-inset="true" data-theme="c" > </div> 
+    
+  </div> 
+ 
+</div>
+
+<div data-role="page" id="my_biography"  data-theme="b"> 
+ 
+  <div data-role="header" data-position="fixed"> <a href="#myAbstractDetail" data-icon="back">Back</a>
+    <h1>Biography</h1> 
+  
+  </div> 
+ 
+  <div data-role="content"> 
+   	 Backgound: <div data-role="text" id="my_personInfo" data-inset="true" data-theme="c" > </div> 
+    
+  </div> 
+ 
+</div>
+</body>	

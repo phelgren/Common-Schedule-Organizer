@@ -1,0 +1,12 @@
+	.loader {
+	    position: fixed;
+	    top: 50%;
+	    left: 50%;
+	    margin-left: -50px; /* half width of the loader gif */
+	    margin-top: -50px; /* half height of the loader gif */
+	    text-align:center;
+	    z-index:9999;
+             overflow: auto;
+	    width: 100px; /* width of the loader gif */
+	    height: 102px; /*height of the loader gif +2px to fix IE8 issue */
+	}

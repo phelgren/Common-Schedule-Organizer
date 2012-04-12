@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="schedule"
+  id="myeclipse.1303441540901"
+  context-root="/schedule"
+  j2ee-spec="5.0"
+  archive="schedule.war">
+  <attributes>
+    <attribute name="webrootdir" value="webapp" />
+  </attributes>
+</project-module>
+
